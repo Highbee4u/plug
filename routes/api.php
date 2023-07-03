@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\AccountController;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,4 +17,13 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
+});
+
+Route::middleware(['treblle'])->group(function () {
+    
+    Route::group(['prefix' => 'account', 'namespace' => 'Api\Account'], function(){
+        Route::get('/', [AirtimeSwapChargesController::class, 'index']);
+        Route::post('/', [AirtimeSwapChargesController::class, 'create']);
+    });
+
 });
