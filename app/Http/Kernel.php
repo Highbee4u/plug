@@ -3,6 +3,8 @@
 namespace App\Http;
 
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
+use App\Http\Middleware\JwtMiddleware;
+use App\Http\Middleware\MustSetTransactionPasscode;
 
 class Kernel extends HttpKernel
 {
@@ -66,5 +68,7 @@ class Kernel extends HttpKernel
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'treblle' => \Treblle\Middlewares\TreblleMiddleware::class,
+        'jwt.verify' => JwtMiddleware::class,
+        'passcode' => MustSetTransactionPasscode::class,
     ];
 }
