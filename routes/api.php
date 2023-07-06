@@ -5,6 +5,9 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\Account\AccountController;
 use App\Http\Controllers\Api\Auth\UserController;
 use App\Http\Controllers\Api\Vehicle\VehicleController;
+use App\Http\Controllers\Api\Ride\RidePlacementController;
+use App\Http\Controllers\Api\Ride\BookingController;
+use App\Http\Controllers\Api\Liscence\LiscenceController;
 
 /*
 |--------------------------------------------------------------------------
@@ -54,8 +57,21 @@ Route::prefix('v1')->group(function () {
         Route::group(['namespace' => 'Api\Account'], function(){
             Route::get('account', [AccountController::class, 'index']);
             Route::post('account', [AccountController::class, 'create']);
-            Route::patch('account/{id}', [AccountController::class, 'create']);
+            Route::patch('account/{id}', [AccountController::class, 'update']);
             Route::delete('account/{id}', [AccountController::class, 'destroy']);
+        });
+
+        Route::group(['namespace' => 'Api\Ride'], function(){
+            Route::get('placeride', [RidePlacementController::class, 'index']);
+            Route::post('placeride', [RidePlacementController::class, 'store']);
+            Route::patch('placeride/{id}', [RidePlacementController::class, 'update']);
+            Route::delete('placeride/{id}', [RidePlacementController::class, 'destroy']);
+        });
+        Route::group(['namespace' => 'Api\Ride'], function(){
+            Route::get('placeride', [BookingsController::class, 'index']);
+            Route::post('placeride', [BookingsController::class, 'store']);
+            // Route::patch('placeride/{id}', [BookingsController::class, 'update']);
+            // Route::delete('placeride/{id}', [BookingsController::class, 'destroy']);
         });
 
     });
