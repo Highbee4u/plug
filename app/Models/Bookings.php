@@ -14,6 +14,10 @@ class Bookings extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function bookings(){
+        return $this->belongsTo(PlaceRide::class);
+    }
+
     protected $fillable = [
 
     ];

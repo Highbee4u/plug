@@ -105,4 +105,8 @@ class User extends Authenticatable implements JWTSubject
     public function Account(){
         return $this->hasOne(Account::class);
     }
+
+    public function placed_ride(){
+        return $this->hasOne(PlaceRide::class);
+    }
 }
