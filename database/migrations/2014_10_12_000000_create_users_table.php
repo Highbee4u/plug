@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('first_name')->nullable();
             $table->string('last_name')->nullable();
             $table->string('email')->nullable()->unique();
-            $table->string('phone')->unique();
+            $table->string('phone_number')->unique();
             $table->string('address')->nullable();
             $table->boolean('has_car')->default(0);
             $table->integer('profile_status')->default(0);
@@ -27,7 +27,7 @@ return new class extends Migration
             $table->string('gender')->nullable();
             $table->integer('passcode')->nullable();
             $table->string('referal_by')->nullable();
-            $table->string('referal_code')->unique();
+            $table->string('referal_code')->nullable()->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password')->nullable();
             $table->rememberToken();

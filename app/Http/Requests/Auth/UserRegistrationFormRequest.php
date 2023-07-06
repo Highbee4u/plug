@@ -23,8 +23,9 @@ class UserRegistrationFormRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'phone_numer' => 'required|numeric|unique:users,phone_number',
+            'phone_number' => 'required|numeric|unique:users,phone_number',
             'password' => 'required|string',
+            'has_car' => 'boolean|in:1,0',
             'referal_by' => 'string|nullable'
         ];
     }

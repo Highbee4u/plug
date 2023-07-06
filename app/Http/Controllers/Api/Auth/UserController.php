@@ -6,7 +6,12 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Requests\Auth\UserRegistrationFormRequest;
 use App\Http\Requests\Auth\UserLoginFormRequest;
+use App\Http\Requests\Auth\SetPasscodeFormRequest;
+use App\Http\Requests\Auth\BasicProfileUpdateFormRequest;
 use App\Services\ReferralServices;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\DB;
+use App\Models\User;
 
 class UserController extends Controller
 {
@@ -42,42 +47,38 @@ class UserController extends Controller
             
             $credential = ['phone_number' => $request['phone_number'] , 'password' => $request['password'] ];
 
-            $user = User::where('phone_number', $request['phone_number'])->first();
-
-            if($user->is_dissabled == 1){
-                return $this->errorResponse('Your account has been dissable, call support to activate', 401);
-            }
-
-            if($user->recovery_mode == 1){
-                return $this->errorResponse('Your account has been set to recovery mode, call support to re-activate', 401);
-            }
             
             if (! $token = auth('api')->attempt($credential)) {
-                
-                if($user->login_attempt == 3){
 
-                    $user->recovery_mode = 1;
-
-                    $user->save();
-                    
-                    return $this->errorResponse('Your account has been set to recovery mode, call support to re-activate', 401);
-                }
-
-                $user->login_attempt += 1;
-
-                $user->save();
-
-                return $this->errorResponse('Unauthenticated, '.(3 - $user->login_attempt == 0 ? 'last attempt and your account would be blocked' : 'You have '.(3 - $user->login_attempt.' left')), 401);
+                return $this->errorResponse('Unauthenticated', 401);
             }
     
-            $user->last_login = \Carbon\Carbon::now(); 
-
-            $user->login_attempt = 0; // reset attemp on successful login
-
-            $user->save();
-
             return $this->respondWithToken($token);
         }
         
+    }
+
+    public function set_passcode(SetPasscodeFormRequest $request)
+    {
+        if($request->validate()){
+           
+            $response = User::find(auth('api')->user()->id)->update(['passcode' => bcrypt($request['passcode'])]);
+
+            return $response 
+                    ? $this->showMessage('Passcode setup successfully', 200) 
+                    : $this->errorResponse('Unable to set passcode, try again later', 409);
+
+        }
+        
+    }
+          
+    public function basic_detail(BasicProfileUpdateFormRequest $request)
+    {
+            $response = User::find(auth('api')->user()->id)->update($request->validated());
+
+            return $response 
+                    ? $this->showMessage('Passcode setup successfully', 200) 
+                    : $this->errorResponse('Unable to set passcode, try again later', 409);
+
     }
 }

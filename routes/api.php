@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\Account\AccountController;
 use App\Http\Controllers\Api\Auth\UserController;
+use App\Http\Controllers\Api\Vehicle\VehicleController;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,7 +23,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::prefix('v1')->group(function () {
     
-    Route::middleware(['treblle'])->group(function(){
+    Route::middleware(['treblle', 'cache.headers:public;max_age=60;etag'])->group(function(){
         
         Route::group(['namespace' => 'Api\Auth'], function () {
             Route::post('register', [UserController::class, 'register']);
@@ -36,8 +37,20 @@ Route::prefix('v1')->group(function () {
         });
     });
 
-    Route::middleware(['treblle', 'jwt.verify'])->group(function () {
+    Route::middleware(['treblle', 'jwt.verify', 'cache.headers:public;max_age=60;etag'])->group(function () {
         
+        Route::group(['namespace' => 'Api\Vehicle'], function(){
+            Route::get('vehicle', [VehicleController::class, 'index']);
+            Route::post('vehicle', [VehicleController::class, 'create']);
+            Route::patch('vehicle/{id}', [VehicleController::class, 'create']);
+            Route::delete('vehicle/{id}', [VehicleController::class, 'destroy']);
+        });
+        Route::group(['namespace' => 'Api\Liscence'], function(){
+            Route::get('liscence', [LiscenceController::class, 'index']);
+            Route::post('liscence', [LiscenceController::class, 'create']);
+            Route::patch('liscence/{id}', [LiscenceController::class, 'create']);
+            Route::delete('liscence/{id}', [LiscenceController::class, 'destroy']);
+        });
         Route::group(['namespace' => 'Api\Account'], function(){
             Route::get('account', [AccountController::class, 'index']);
             Route::post('account', [AccountController::class, 'create']);
