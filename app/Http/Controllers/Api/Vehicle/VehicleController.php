@@ -4,6 +4,10 @@ namespace App\Http\Controllers\Api\Vehicle;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Models\Vehicle;
+use App\Http\Resources\Vehicle\VehicleResource;
+use App\Http\Requests\Vehicle\RegisterVehicleFormRequest;
+use App\Http\Requests\Vehicle\UpdateVehicleFormRequest;
 
 class VehicleController extends Controller
 {
@@ -12,26 +16,32 @@ class VehicleController extends Controller
      */
     public function index()
     {
-        $account_detail = Account::where('user_id', auth('api')->user()->id)->first();
-        return $account_detail 
-                ? $this->successResponse(['account_detail' => new AccountResource($account_detail)], 'Account Detail', Response::HTTP_OK)
-                : $this->errorResponse('You have no account yet', Response::HTTP_NOT_FOUND);
+        $vehicle_detail = auth('api')->user()->Vehicle;
+        return $vehicle_detail 
+                ? $this->successResponse(['vehicle_detail' => new VehicleResource($vehicle_detail)], 'Vehicle Detail', Response::HTTP_OK)
+                : $this->errorResponse('You have no vehicle yet', Response::HTTP_NOT_FOUND);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(RegisterVehicleFormRequest $request)
     {
-        //
+        if(!auth('api')->user()->has_car){
+            return $this->errorResponse('You registered has a user, kindly update your profile and select has car', 422);
+        }
+        
+        if(auth('api')->user()->Vehicle){
+            return $this->errorResponse('You already register a vehicle', 422);
+        }
+
+        if($request->validated()){
+            // process vehicle registration
+        }
+
+
+
     }
 
     /**
@@ -39,21 +49,13 @@ class VehicleController extends Controller
      */
     public function show(string $id)
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
+        // 
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(UpdateVehicleFormRequest $request, string $id)
     {
         //
     }
