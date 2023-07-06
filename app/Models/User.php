@@ -91,7 +91,7 @@ class User extends Authenticatable implements JWTSubject
     }
 
     public function License(){
-        return $this->has(Liscence::class);
+        return $this->hasOne(Liscence::class);
     }
 
     public function Transaction(){
