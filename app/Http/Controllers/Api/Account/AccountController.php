@@ -8,6 +8,7 @@ use App\Models\Account;
 use App\Http\Resources\Account\AccountResource;
 use App\Http\Requests\Account\CreateBankAccountFormRequest;
 use App\Http\Requests\Account\UpdateBankAccountFormRequest;
+use Symfony\Component\HttpFoundation\Response;
 
 class AccountController extends Controller
 {
@@ -18,8 +19,8 @@ class AccountController extends Controller
     {
         $account_detail = Account::where('user_id', auth('api')->user()->id)->first();
         return $account_detail 
-                ? $this->successResponse(['account_detail' => new AccountResource($account_detail)], 'Account Detail', 200)
-                : $this->errorResponse('You have no account yet', 404);
+                ? $this->successResponse(['account_detail' => new AccountResource($account_detail)], 'Account Detail', Response::HTTP_OK)
+                : $this->errorResponse('You have no account yet', Response::HTTP_NOT_FOUND);
     }
 
 
@@ -37,7 +38,7 @@ class AccountController extends Controller
         $account_detail = Account::create($data);
 
         return $account_detail 
-                ? $this->successResponse(['account_detail' => new AccountResource($account_detail)], 'Account Detail', 200)
+                ? $this->successResponse(['account_detail' => new AccountResource($account_detail)], 'Account Detail', 201)
                 : $this->errorResponse('Unable to create account, try again later', 404);
     }
 

@@ -12,7 +12,10 @@ class VehicleController extends Controller
      */
     public function index()
     {
-        //
+        $account_detail = Account::where('user_id', auth('api')->user()->id)->first();
+        return $account_detail 
+                ? $this->successResponse(['account_detail' => new AccountResource($account_detail)], 'Account Detail', Response::HTTP_OK)
+                : $this->errorResponse('You have no account yet', Response::HTTP_NOT_FOUND);
     }
 
     /**
